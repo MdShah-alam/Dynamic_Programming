@@ -1,62 +1,46 @@
 #include<bits/stdc++.h>
 using namespace std;
-int const N=104;
-int const target=1e5+5;
-int ar[N] , dp[N][target];
+const int N=101;
+const int M=1e5+5;
+int arr[N];
+long long dp[N][M];
 
-int subsetsum(int n,int t)
+int subset_sum(int n , int target)
 {
     if(n==0){
-        if(t==0)
-            return 1;
-        else
-            return 0;
+        if(target==0) return 1;
+        return 0;
     }
-    if(t==0)
-        return 1;
-    if(dp[n][t]!=-1)
-        return dp[n][t];
+    if(dp[n][target]!=-1) return dp[n][target];
 
-    int ans1=subsetsum(n-1,t);
-    if(t<ar[n]){
-        return dp[n][t]=ans1;
+    int ans1=subset_sum(n-1,target);
+    if(target<arr[n]){
+        dp[n][target]=ans1;
+        return ans1;
     }
-    int ans2 = subsetsum(n-1,t-ar[n]);
-    dp[n][t]=ans1 || ans2 ;
-    return dp[n][t];
+    int ans2=subset_sum(n-1,target-arr[n]);
+    int ans=ans1 || ans2;
+    dp[n][target]=ans;
+    return ans;
 }
 
 int main()
 {
-    int n,t;
-    cin>>n>>t;
+    int n,target;
+    cin>>n>>target;
     for(int i=1;i<=n;i++)
-        cin>>ar[i];
+        cin>>arr[i];
+
     for(int i=0;i<=n;i++){
-        for(int j=0;j<=t;j++)
+        for(int j=0;j<=target;j++)
             dp[i][j]=-1;
     }
-    cout<<subsetsum(n,t)<<endl;
 
-    dp[0][0]=1;
-    for(int i=1;i<=t;i++){
-        dp[0][i]=0;
-    }
-
-    for(int i=1;i<=n;i++){
-        for(int j=1;j<=t;j++){
-            int ans1=dp[i-1][j];
-            if(j<ar[i]){
-                dp[i][j]=ans1;
-                cout<<" 'i :"<<i<<" ,j:"<<j<<" , "<<dp[i][j]<<" '";
-                continue;
-            }
-            int ans2=dp[i-1][j-ar[i]];
-            dp[i][j]=ans1 || ans2;
-            cout<<" 'i :"<<i<<", j:"<<j<<" , "<<dp[i][j]<<" '";
-        }
-        cout<<endl;
-    }
-    cout<<dp[n][t]<<endl;
+    cout<<subset_sum(n,target)<<endl;
     return 0;
-}
+}/**
+
+6 9
+3 34 4 12 5 2
+
+*/
